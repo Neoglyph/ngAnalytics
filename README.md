@@ -2,6 +2,7 @@ ngAnalytics
 ===========
 
 AngularJS Directive for [Google Analytics Embed API](https://developers.google.com/analytics/devguides/reporting/embed/v1/)
+German tutorial on [FLYACTS website](http://www.flyacts.com/blog/angularjs-google-analytics-embed-api-nganalytics/)
 
 ## Functionality
 * Authorization
