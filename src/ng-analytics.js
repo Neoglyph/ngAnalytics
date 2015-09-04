@@ -36,7 +36,9 @@
                         });
                     }
                     self.ga.auth.authorize({
-                        serverAuth: self.serviceAuthToken
+                        serverAuth: {
+                          'access_token': self.serviceAuthToken
+                        }
                     });
                 }, 0);
             };
