@@ -1,5 +1,6 @@
 /*global gapi*/
 (function () {
+    'use strict';
 
     var app;
     // declare ngAnalytics module
@@ -35,7 +36,7 @@
                         });
                     }
                     self.ga.auth.authorize({
-                        serverAuth: '{{' + self.serviceAuthToken + '}}'
+                        serverAuth: self.serviceAuthToken
                     });
                 }, 0);
             };
