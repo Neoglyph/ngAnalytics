@@ -3,7 +3,7 @@
 
     var app;
     // declare ngAnalytics module
-    app = angular.module("ngAnalytics", []);
+    app = angular.module('ngAnalytics', []);
 
     // service to hold viewSelectors, getter, setters, helper
     app.service('ngAnalyticsService', [
@@ -12,6 +12,7 @@
             var clientId;
 
             this.ga = null;
+            this.serviceAuthToken = null;
 
             this.setClientId = function (id) {
                 clientId = id;
@@ -26,10 +27,15 @@
                 var self = this;
 
                 $timeout(function () {
+                    if (!self.serviceAuthToken) {
+                        return self.ga.auth.authorize({
+                            container: container,
+                            clientid: clientId,
+                            userInfoLabel: self.authLabel
+                        });
+                    }
                     self.ga.auth.authorize({
-                        container: container,
-                        clientid: clientId,
-                        userInfoLabel: self.authLabel
+                        serverAuth: '{{' + self.serviceAuthToken + '}}'
                     });
                 }, 0);
             };
@@ -40,19 +46,21 @@
         }
     ]);
 
-    app.directive("ngAnalyticsAuth", [
+    app.directive('ngAnalyticsAuth', [
         'ngAnalyticsService',
         function (ngAnalyticsService) {
             return {
                 scope: {
                     label: '@',
                     authContainer: '@',
+                    serviceAuthToken: '@',
                     hideOnAuth: '@'
                 },
                 restrict: 'E',
                 templateUrl: 'ngAnalytics-auth/template.html',
                 link: function ($scope) {
                     ngAnalyticsService.authLabel = $scope.label;
+                    ngAnalyticsService.serviceAuthToken = $scope.serviceAuthToken;
                     $scope.authContainer = $scope.authContainer || 'embed-api-auth-container';
 
                     var watcher = $scope.$watch(function () {
@@ -84,7 +92,7 @@
         }
     ]);
 
-    app.directive("ngAnalyticsChart", [
+    app.directive('ngAnalyticsChart', [
         'ngAnalyticsService',
         function (ngAnalyticsService) {
             return {
@@ -108,7 +116,7 @@
                             /**
                             * Authorize the user immediately if the user has already granted access.
                             * If no access has been created, render an authorize button inside the
-                            * element with the ID "embed-api-auth-container".
+                            * element with the ID 'embed-api-auth-container'.
                             */
                             if (!ngAnalyticsService.ga.auth.isAuthorized() && first) {
                                 ngAnalyticsService.authorize($scope.authContainer || 'embed-api-auth-container');
@@ -159,7 +167,7 @@
         }
     ]);
 
-    app.directive("ngAnalyticsReport", [
+    app.directive('ngAnalyticsReport', [
         '$rootScope',
         '$q',
         'ngAnalyticsService',
@@ -201,7 +209,7 @@
                             /**
                             * Authorize the user immediately if the user has already granted access.
                             * If no access has been created, render an authorize button inside the
-                            * element with the ID "embed-api-auth-container".
+                            * element with the ID 'embed-api-auth-container'.
                             */
                             if (!ngAnalyticsService.ga.auth.isAuthorized() && first) {
                                 ngAnalyticsService.authorize($scope.authContainer || 'embed-api-auth-container');
@@ -264,7 +272,7 @@
         }
     ]);
 
-    app.directive("ngAnalyticsView", [
+    app.directive('ngAnalyticsView', [
         'ngAnalyticsService',
         function (ngAnalyticsService) {
             return {
@@ -286,14 +294,14 @@
                             /**
                             * Authorize the user immediately if the user has already granted access.
                             * If no access has been created, render an authorize button inside the
-                            * element with the ID "embed-api-auth-container".
+                            * element with the ID 'embed-api-auth-container'.
                             */
                             if (!ngAnalyticsService.ga.auth.isAuthorized() && first) {
                                 ngAnalyticsService.authorize($scope.authContainer || 'embed-api-auth-container');
                             }
                             /**
                             * Create a new ViewSelector instance to be rendered inside of an
-                            * element with the id "view-selector-container".
+                            * element with the id 'view-selector-container'.
                             */
                             $scope.viewSelectorContainer = $scope.viewSelectorContainer || 'view-selector-container';
 

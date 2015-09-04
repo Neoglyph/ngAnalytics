@@ -20,7 +20,7 @@ German tutorial on [FLYACTS website](http://www.flyacts.com/blog/angularjs-googl
 ## Usage
 * include ng-analytics[.min].js in your index.html before your module definition
 
-> 
+>
     <script type="text/javascript" src="src/ng-analytics.min.js"></script>
 
 * add the ng-analytics module to your module/app dependencies
@@ -30,18 +30,19 @@ German tutorial on [FLYACTS website](http://www.flyacts.com/blog/angularjs-googl
 
 * set your Google Analytics clientId in your `run` block
 
-> 
+>
     // inject ngAnalyticsService
     myAppModule.run(['ngAnalyticsService', function (ngAnalyticsService) {
         ngAnalyticsService.setClientId('YOUR_CLIENTID'); // e.g. xxxxxxxxxx-xxxxxxxxxxxxxxxxxxxxx.apps.googleusercontent.com
     }]);
 
-* add ng-analytics directives to your DOM 
+* add ng-analytics directives to your DOM
 
 ## Directives
 
 ### Authorization - ng-analytics-auth
 Handles user authorization with Google.
+Accepts `service-auth-token` attribute to set the auth token of a service account (accepts a string)
 
 #### Usage
 >
@@ -73,7 +74,7 @@ Adds a chart and can be connected to a viewSelector.
 #### Attributes
 * __chart__ _(required)_ - object (scope variable) for a google analytics ('ids' are not necessary if connected with viewSelector, 'container' is required to build DOM-nodes and inject the Google chart-object) - e.g.
 
-> 
+>
     {
         reportType: 'ga',
         query: {
@@ -107,7 +108,7 @@ Sends single or multiple report-queries and get informed about the repsonse.
 * __queries__ _(required)_ - array of report-query object (scope variable) (query.
 ids is required for each report-query if not connected with viewSelector, e.g.
 
-> 
+>
     [{
         query: {
             ids: 'ga:xxxxxx',  // put your viewID here
@@ -124,17 +125,14 @@ AngularJS events which are triggered by the directive.
 
 * __$gaReportSuccess__ - triggered after all report requests finished successfully, returns results of the queries and the connected DOM-element to easily process the data and put it in the DOM (like using chart.js)
 
-> 
+>
     $rootScope.$on('$gaReportSuccess', function (event, response, element) {
         // process the 'response' and put it in the 'element'
     });
 
 * __$gaReportError__ - triggered if a report request failed, returns results of the query and the connected DOM-element to easily process the error-data and put it in the DOM
 
-> 
+>
     $rootScope.$on('$gaReportError', function (event, response, element) {
         // process the error 'response' and put it in the 'element'
     });
-
-
-
