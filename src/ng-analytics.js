@@ -55,14 +55,15 @@
             return {
                 scope: {
                     label: '@?',
-                    query: '=',
+                    viewSelectorContainer: '@',
                     increaseClass: '@?',
                     decreaseClass: '@?'
                 },
                 restrict: 'E',
                 templateUrl: 'ngAnalytics-activeUsers/template.html',
                 link: function ($scope) {
-                    var first = !ngAnalyticsService.authorized ? true : false;
+                    var first = !ngAnalyticsService.authorized ? true : false,
+                        viewWatcher;
                     ngAnalyticsService.authorized = true;
                     // add functionality only if gapi is ready
                     $scope.$watch(function () {
@@ -86,32 +87,54 @@
                             var activeUsers = new ngAnalyticsService.ga.ext.ActiveUsers({
                                 container: $scope.activeUsersContainer,
                                 pollingInterval: 5,
-                                template: $scope.label,
-                                query: $scope.query
+                                template: $scope.label
                             });
 
-                            function callback() {
-                                activeUsers.execute();
-                                // Render the view selector to the page.
-                                activeUsers.once('success', function() {
-                                    var timeout;
+                            // Render the view selector to the page.
+                            activeUsers.once('success', function() {
+                                var timeout;
 
-                                    this.on('change', function(data) {
-                                        var element = angular.element(this.container.firstChild);
-                                        var animationClass = data.delta > 0 ? $scope.increaseClass || 'is-increasing' : $scope.decreaseClass || 'is-decreasing';
-                                        element.addClass += (animationClass);
+                                this.on('change', function(data) {
+                                    var element = angular.element(this.container.firstChild);
+                                    var animationClass = data.delta > 0 ? $scope.increaseClass || 'is-increasing' : $scope.decreaseClass || 'is-decreasing';
+                                    element.addClass += (animationClass);
 
-                                        $timeout.cancel(timeout);
-                                        timeout = $timeout(function() {
-                                            element.removeClass($scope.increaseClass + ' ' + $scope.decreaseClass);
-                                        }, 3000);
-                                    });
+                                    $timeout.cancel(timeout);
+                                    timeout = $timeout(function() {
+                                        element.removeClass($scope.increaseClass + ' ' + $scope.decreaseClass);
+                                    }, 3000);
                                 });
-                            }
+                            });
 
-                            ngAnalyticsService.ga.auth.once('success', callback);
-                            if (ngAnalyticsService.ga.auth.isAuthorized()) {
-                                callback();
+                            // If viewSelector container -> watch if viewselector is created -> if so -> add change listener and update chart
+                            if ($scope.viewSelectorContainer) {
+                                viewWatcher = $scope.$watch(function () {
+                                    return ngAnalyticsService.viewSelectors[$scope.viewSelectorContainer];
+                                }, function (viewSelector) {
+                                    if (viewSelector) {
+                                        ngAnalyticsService.viewSelectors[$scope.viewSelectorContainer].on('change', function (ids) {
+                                            var newIds = {
+                                                query: {
+                                                    ids: ids
+                                                }
+                                            };
+
+                                            activeUsers.set(newIds).execute();
+                                        });
+                                        // clear watcher
+                                        viewWatcher();
+                                    }
+                                });
+                            } else {
+                                var callback = function () {
+                                    // Render the view selector to the page.
+                                    activeUsers.execute();
+                                };
+
+                                ngAnalyticsService.ga.auth.once('success', callback);
+                                if (ngAnalyticsService.ga.auth.isAuthorized()) {
+                                    callback();
+                                }
                             }
                         }
                     });
@@ -353,7 +376,8 @@
                 scope: {
                     viewSelectorContainer: '@',
                     authContainer: '@',
-                    charts: '='
+                    charts: '=',
+                    activeUsers: '='
                 },
                 restrict: 'E',
                 templateUrl: 'ngAnalytics-view/template.html',
