@@ -113,29 +113,12 @@
                                 }, function (viewSelector) {
                                     if (viewSelector) {
                                         ngAnalyticsService.viewSelectors[$scope.viewSelectorContainer].on('change', function (ids) {
-                                            var newIds = {
-                                                query: {
-                                                    ids: ids
-                                                }
-                                            };
-                                            console.log(newIds);
-                                            activeUsers.set(newIds).execute();
+                                            activeUsers.set(ids).execute();
                                         });
                                         // clear watcher
                                         viewWatcher();
                                     }
                                 });
-                            } else {
-                                console.log('else');
-                                var callback = function () {
-                                    // Render the view selector to the page.
-                                    activeUsers.execute();
-                                };
-
-                                ngAnalyticsService.ga.auth.once('success', callback);
-                                if (ngAnalyticsService.ga.auth.isAuthorized()) {
-                                    callback();
-                                }
                             }
                         }
                     });
