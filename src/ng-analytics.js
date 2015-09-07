@@ -88,6 +88,7 @@
                                 template: $scope.label
                             });
                             function callback() {
+                                activeUsers.execute();
                                 // Render the view selector to the page.
                                 activeUsers.once('success', function() {
                                     var timeout;
