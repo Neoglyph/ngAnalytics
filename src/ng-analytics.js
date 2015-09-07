@@ -55,6 +55,7 @@
             return {
                 scope: {
                     label: '@?',
+                    query: '=',
                     increaseClass: '@?',
                     decreaseClass: '@?'
                 },
@@ -85,8 +86,10 @@
                             var activeUsers = new ngAnalyticsService.ga.ext.ActiveUsers({
                                 container: $scope.activeUsersContainer,
                                 pollingInterval: 5,
-                                template: $scope.label
+                                template: $scope.label,
+                                query: $scope.query
                             });
+
                             function callback() {
                                 activeUsers.execute();
                                 // Render the view selector to the page.
