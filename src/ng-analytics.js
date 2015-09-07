@@ -67,7 +67,7 @@
                         viewWatcher;
                     ngAnalyticsService.authorized = true;
                     // add functionality only if gapi is ready
-                    $scope.$watch(function () {
+                    var watcher = $scope.$watch(function () {
                         return ngAnalyticsService.isReady;
                     }, function (isReady) {
                         if (isReady) {
@@ -114,7 +114,6 @@
                                 }, function (viewSelector) {
                                     if (viewSelector) {
                                         ngAnalyticsService.viewSelectors[$scope.viewSelectorContainer].on('change', function (ids) {
-                                            console.log(viewSelector, ids);
                                             activeUsers.set(ids).execute();
                                         });
                                         // clear watcher
@@ -123,7 +122,6 @@
                                 });
                             } else {
                                 var callback = function () {
-                                    console.log('else');
                                     // Render the view selector to the page.
                                     if ($scope.defaultIds) {
                                         activeUsers.set($scope.defaultIds).execute();
@@ -135,6 +133,8 @@
                                     callback();
                                 }
                             }
+                            // Remove watcher
+                            watcher();
                         }
                     });
                 }
@@ -235,7 +235,6 @@
                                                     ids: ids
                                                 }
                                             };
-console.log(newIds);
                                             chart.set(newIds).execute();
                                         });
                                         // clear watcher
