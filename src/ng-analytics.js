@@ -235,7 +235,7 @@
                                                     ids: ids
                                                 }
                                             };
-
+console.log(newIds);
                                             chart.set(newIds).execute();
                                         });
                                         // clear watcher
