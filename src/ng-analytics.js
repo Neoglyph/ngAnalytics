@@ -112,14 +112,13 @@
                                     return ngAnalyticsService.viewSelectors[$scope.viewSelectorContainer];
                                 }, function (viewSelector) {
                                     if (viewSelector) {
-                                        console.log('test');
                                         ngAnalyticsService.viewSelectors[$scope.viewSelectorContainer].on('change', function (ids) {
                                             var newIds = {
                                                 query: {
                                                     ids: ids
                                                 }
                                             };
-
+                                            console.log(newIds);
                                             activeUsers.set(newIds).execute();
                                         });
                                         // clear watcher
@@ -127,6 +126,7 @@
                                     }
                                 });
                             } else {
+                                console.log('else');
                                 var callback = function () {
                                     // Render the view selector to the page.
                                     activeUsers.execute();
