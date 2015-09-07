@@ -54,7 +54,7 @@
         function (ngAnalyticsService, $timeout) {
             return {
                 scope: {
-                    label: '@',
+                    label: '@?',
                     increaseClass: '@?',
                     decreaseClass: '@?'
                 },
@@ -84,7 +84,8 @@
 
                             var activeUsers = new ngAnalyticsService.ga.ext.ActiveUsers({
                                 container: $scope.activeUsersContainer,
-                                pollingInterval: 5
+                                pollingInterval: 5,
+                                template: $scope.label
                             });
 
                             var callback = function () {
@@ -405,7 +406,7 @@
         function ($templateCache, $timeout, ngAnalyticsService) {
 
             // add Google Analytics Script at the end of the page
-            var gaCode = document.createTextNode("(function(w,d,s,g,js,fs){ g=w.gapi||(w.gapi={});g.analytics={q:[],ready:function(f){this.q.push(f);}}; js=d.createElement(s);fs=d.getElementsByTagName(s)[0]; js.src='https://apis.google.com/js/platform.js'; fs.parentNode.insertBefore(js,fs);js.onload=function(){g.load('analytics');}; }(window,document,'script'));");
+            var gaCode = document.createTextNode('(function(w,d,s,g,js,fs){ g=w.gapi||(w.gapi={});g.analytics={q:[],ready:function(f){this.q.push(f);}}; js=d.createElement(s);fs=d.getElementsByTagName(s)[0]; js.src="https://apis.google.com/js/platform.js"; fs.parentNode.insertBefore(js,fs);js.onload=function(){g.load("analytics");}; }(window,document,"script"));');
             var scriptTag = document.createElement('script');
             scriptTag.type = 'text/javascript';
             scriptTag.appendChild(gaCode);
@@ -413,6 +414,53 @@
 
             // if ga is ready -> inform service
             gapi.analytics.ready(function () {
+                // Add custom analytics component
+                gapi.analytics.createComponent('ActiveUsers', {
+                    initialize: function() {
+                        this.activeUsers = 0;
+                    },
+                    execute: function() {
+                        this.polling_ && this.stop(), this.render_(), gapi.analytics.auth.isAuthorized() ? this.getActiveUsers_() : gapi.analytics.auth.once('success', this.getActiveUsers_.bind(this));
+                    },
+                    stop: function() {
+                        clearTimeout(this.timeout_), this.polling_ = !1, this.emit('stop', {
+                            activeUsers: this.activeUsers
+                        });
+                    },
+                    render_: function() {
+                        var t = this.get();
+                        this.container = 'string' == typeof t.container ? document.getElementById(t.container) : t.container, this.container.innerHTML = t.template || this.template, this.container.querySelector('b').innerHTML = this.activeUsers, this.container.querySelector('span').innerHTML = t.label || 'Active Users';
+                    },
+                    getActiveUsers_: function() {
+                        var t = this.get(),
+                            e = 1e3 * (t.pollingInterval || 5);
+                        if (isNaN(e) || 5e3 > e) throw new Error('Frequency must be 5 seconds or more.');
+                        this.polling_ = !0, gapi.client.analytics.data.realtime.get({
+                            ids: t.ids,
+                            metrics: 'rt:activeUsers'
+                        }).execute(function(t) {
+                            var i = t.totalResults ? +t.rows[0][0] : 0,
+                                s = this.activeUsers;
+                            this.emit('success', {
+                                activeUsers: this.activeUsers
+                            }), i != s && (this.activeUsers = i, this.onChange_(i - s)), (this.polling_ = !0) && (this.timeout_ = setTimeout(this.getActiveUsers_.bind(this), e))
+                        }.bind(this));
+                    },
+                    onChange_: function(t) {
+                        var e = this.container.querySelector('b');
+                        e && (e.innerHTML = this.activeUsers), this.emit('change', {
+                            activeUsers: this.activeUsers,
+                            delta: t
+                        }), t > 0 ? this.emit('increase', {
+                            activeUsers: this.activeUsers,
+                            delta: t
+                        }) : this.emit('decrease', {
+                            activeUsers: this.activeUsers,
+                            delta: t
+                        });
+                    },
+                    template: '<div class="ActiveUsers"><span class="ActiveUsers-label"></span> <b class="ActiveUsers-value"></b></div>'
+                });
                 $timeout(function () {
                     ngAnalyticsService.ga = gapi.analytics;
                     ngAnalyticsService.isReady = true;
