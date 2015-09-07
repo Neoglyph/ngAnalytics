@@ -55,7 +55,8 @@
             return {
                 scope: {
                     label: '@?',
-                    viewSelectorContainer: '@',
+                    defaultIds: '=?',
+                    viewSelectorContainer: '@?',
                     increaseClass: '@?',
                     decreaseClass: '@?'
                 },
@@ -112,13 +113,26 @@
                                     return ngAnalyticsService.viewSelectors[$scope.viewSelectorContainer];
                                 }, function (viewSelector) {
                                     if (viewSelector) {
-                                        ngAnalyticsService.viewSelectors[$scope.viewSelectorContainer].on('change', function (ids) {
+                                        ngAnalyticsService.viewSelectors[$scope.viewSelectorContainer].on('viewChange', function (ids) {
+                                            console.log(ids);
                                             activeUsers.set(ids).execute();
                                         });
                                         // clear watcher
                                         viewWatcher();
                                     }
                                 });
+                            } else {
+                                var callback = function () {
+                                    // Render the view selector to the page.
+                                    if ($scope.defaultIds) {
+                                        activeUsers.set($scope.defaultIds).execute();
+                                    }
+                                };
+
+                                ngAnalyticsService.ga.auth.once('success', callback);
+                                if (ngAnalyticsService.ga.auth.isAuthorized()) {
+                                    callback();
+                                }
                             }
                         }
                     });
