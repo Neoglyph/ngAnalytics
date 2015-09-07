@@ -89,6 +89,7 @@
                             });
 
                             var callback = function () {
+                                console.log('test');
                                 // Render the view selector to the page.
                                 activeUsers.once('success', function() {
                                     var timeout;
