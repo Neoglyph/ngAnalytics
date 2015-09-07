@@ -114,7 +114,7 @@
                                 }, function (viewSelector) {
                                     if (viewSelector) {
                                         ngAnalyticsService.viewSelectors[$scope.viewSelectorContainer].on('change', function (ids) {
-                                            console.log(viewSelector);
+                                            console.log(viewSelector, ids);
                                             activeUsers.set(ids).execute();
                                         });
                                         // clear watcher
