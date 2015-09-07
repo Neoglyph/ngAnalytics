@@ -413,6 +413,7 @@
                         this.activeUsers = 0;
                     },
                     execute: function() {
+                        console.log('test');
                         this.polling_ && this.stop(), this.render_(), gapi.analytics.auth.isAuthorized() ? this.getActiveUsers_() : gapi.analytics.auth.once('success', this.getActiveUsers_.bind(this));
                     },
                     stop: function() {
@@ -428,6 +429,8 @@
                     getActiveUsers_: function() {
                         var t = this.get(),
                             e = 1e3 * (t.pollingInterval || 5);
+
+                            console.log('test1');
                         if (isNaN(e) || 5e3 > e) throw new Error('Frequency must be 5 seconds or more.');
                         this.polling_ = !0, gapi.client.analytics.data.realtime.get({
                             ids: t.ids,
