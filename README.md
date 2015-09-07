@@ -28,7 +28,7 @@ German tutorial on [FLYACTS website](http://www.flyacts.com/blog/angularjs-googl
 >  
     var myApp = angular.module('myApp', ['ngAnalytics']);
 
-* set your Google Analytics clientId in your `run` block
+* set your Google Analytics clientId in your `run` block or use Service Tokens (see ng-analytics-auth)
 
 >
     // inject ngAnalyticsService
@@ -69,7 +69,7 @@ Adds a chart and can be connected to a viewSelector.
 
 #### Usage
 >
-    <ng-ga-chart chart="chart" view-selector-container="view-selector-container" auth-container="embed-api-auth-container"></ng-ga-chart>
+    <ng-analytics-chart chart="chart" view-selector-container="view-selector-container" auth-container="embed-api-auth-container"></ng-analytics-chart>
 
 #### Attributes
 * __chart__ _(required)_ - object (scope variable) for a google analytics ('ids' are not necessary if connected with viewSelector, 'container' is required to build DOM-nodes and inject the Google chart-object) - e.g.
@@ -119,6 +119,27 @@ ids is required for each report-query if not connected with viewSelector, e.g.
 
 * __view-selector-container__ _(optional)_ - string of id for connected viewSelector
 * __auth-container__ _(optional, default: 'embed-api-auth-container')_ - string of the id of the auth-container - required to connect report with the authorization
+
+### Active Users in realtime - ng-analytics-active-users
+Adds a active user counter.
+
+#### Usage
+>
+    <ng-analytics-active-users view-selector-container="view-selector-container" auth-container="embed-api-auth-container"></ng-analytics-active-users>
+
+#### Attributes
+* __view-selector-container__ _(optional, required if defaultIds not set)_ - string of id for connected viewSelector
+* __auth-container__ _(optional, default: 'embed-api-auth-container')_ - string of the id of the auth-container - required to connect active user code with the authorization
+* __default-ids___ _(optional, required if view-selector-container not set)_ object with configuration and required ids-property
+>
+    $scope.defaultIds = {
+        ids: 'ga:XXXXXX'
+    };
+
+* __active-users-container__ _(optional, default: 'active-users-container')_ - string for id of the created DOM-element
+* __label__ _(optional, default: 'Active Users')_ - string for the label
+* __increase-class__ _(optional, default: 'is-increasing')_ - css-class name, which is set, if user count has increased (class will be removed after 3 seconds)
+* __decrease-class__ _(optional, default: 'is-decreasing')_ - css-class name, which is set, if user count has decreased (class will be removed after 3 seconds)
 
 #### Events
 AngularJS events which are triggered by the directive.

@@ -8,10 +8,10 @@
             .input-error {
                 border: 2px dashed red;
             }
-            .is-increasing {
+            .is-increasing, .increaser {
                 background-color: green;
             }
-            .is-decreasing {
+            .is-decreasing, .decreaser {
                 background-color: red;
             }
         </style>
@@ -104,7 +104,7 @@
             <ng-analytics-report queries="queries" auth-container="embed-api-auth-container" view-selector-container="view-selector-container"></ng-analytics-report>
             <ng-analytics-chart chart="extraChart" auth-container="embed-api-auth-container"></ng-analytics-chart>
             <ng-analytics-active-users default-ids="defaultIds" auth-container="embed-api-auth-container"></ng-analytics-active-users>
-            <ng-analytics-active-users active-users-container="active-users-container-1" view-selector-container="view-selector-container" auth-container="embed-api-auth-container"></ng-analytics-active-users>
+            <ng-analytics-active-users label="Current users:" increase-class="increaser" decrease-class="decreaser" active-users-container="active-users-container-1" view-selector-container="view-selector-container" auth-container="embed-api-auth-container"></ng-analytics-active-users>
             <ng-analytics-chart ng-repeat="chart in charts" chart="chart" view-selector-container="view-selector-container" auth-container="embed-api-auth-container"></ng-analytics-chart>
         </div>
     </body>

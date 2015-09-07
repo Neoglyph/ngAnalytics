@@ -89,7 +89,7 @@
                             var activeUsers = new ngAnalyticsService.ga.ext.ActiveUsers({
                                 container: $scope.activeUsersContainer,
                                 pollingInterval: 5,
-                                template: $scope.label
+                                label: $scope.label
                             });
 
                             // Render the view selector to the page.
