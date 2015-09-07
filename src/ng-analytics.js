@@ -85,31 +85,24 @@
                             var activeUsers = new ngAnalyticsService.ga.ext.ActiveUsers({
                                 container: $scope.activeUsersContainer,
                                 pollingInterval: 5,
-                                template: $scope.label
+                                //template: $scope.label
                             });
 
-                            var callback = function () {
-                                // Render the view selector to the page.
-                                activeUsers.once('success', function() {
-                                    var timeout;
+                            // Render the view selector to the page.
+                            activeUsers.once('success', function() {
+                                var timeout;
 
-                                    this.on('change', function(data) {
-                                        var element = angular.element(this.container.firstChild);
-                                        var animationClass = data.delta > 0 ? $scope.increaseClass || 'is-increasing' : $scope.decreaseClass || 'is-decreasing';
-                                        element.addClass += (animationClass);
+                                this.on('change', function(data) {
+                                    var element = angular.element(this.container.firstChild);
+                                    var animationClass = data.delta > 0 ? $scope.increaseClass || 'is-increasing' : $scope.decreaseClass || 'is-decreasing';
+                                    element.addClass += (animationClass);
 
-                                        $timeout.cancel(timeout);
-                                        timeout = $timeout(function() {
-                                            element.removeClass($scope.increaseClass + ' ' + $scope.decreaseClass);
-                                        }, 3000);
-                                    });
+                                    $timeout.cancel(timeout);
+                                    timeout = $timeout(function() {
+                                        element.removeClass($scope.increaseClass + ' ' + $scope.decreaseClass);
+                                    }, 3000);
                                 });
-                            };
-
-                            ngAnalyticsService.ga.auth.once('success', callback);
-                            if (ngAnalyticsService.ga.auth.isAuthorized()) {
-                                callback();
-                            }
+                            });
                         }
                     });
                 }
