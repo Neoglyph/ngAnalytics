@@ -89,7 +89,6 @@
                             });
 
                             var callback = function () {
-                                console.log('test');
                                 // Render the view selector to the page.
                                 activeUsers.once('success', function() {
                                     var timeout;
@@ -429,6 +428,7 @@
                         });
                     },
                     render_: function() {
+                        console.log(this.get());
                         var t = this.get();
                         this.container = 'string' == typeof t.container ? document.getElementById(t.container) : t.container, this.container.innerHTML = t.template || this.template, this.container.querySelector('b').innerHTML = this.activeUsers, this.container.querySelector('span').innerHTML = t.label || 'Active Users';
                     },
