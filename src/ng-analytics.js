@@ -56,6 +56,7 @@
                 scope: {
                     label: '@?',
                     defaultIds: '=?',
+                    activeUsersContainer: '@?',
                     viewSelectorContainer: '@?',
                     increaseClass: '@?',
                     decreaseClass: '@?'
