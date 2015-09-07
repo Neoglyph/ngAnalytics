@@ -374,9 +374,7 @@
             return {
                 scope: {
                     viewSelectorContainer: '@',
-                    authContainer: '@',
-                    charts: '=',
-                    activeUsers: '='
+                    authContainer: '@'
                 },
                 restrict: 'E',
                 templateUrl: 'ngAnalytics-view/template.html',
