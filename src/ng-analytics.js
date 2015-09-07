@@ -85,24 +85,30 @@
                             var activeUsers = new ngAnalyticsService.ga.ext.ActiveUsers({
                                 container: $scope.activeUsersContainer,
                                 pollingInterval: 5,
-                                //template: $scope.label
+                                template: $scope.label
                             });
+                            function callback() {
+                                // Render the view selector to the page.
+                                activeUsers.once('success', function() {
+                                    var timeout;
 
-                            // Render the view selector to the page.
-                            activeUsers.once('success', function() {
-                                var timeout;
+                                    this.on('change', function(data) {
+                                        var element = angular.element(this.container.firstChild);
+                                        var animationClass = data.delta > 0 ? $scope.increaseClass || 'is-increasing' : $scope.decreaseClass || 'is-decreasing';
+                                        element.addClass += (animationClass);
 
-                                this.on('change', function(data) {
-                                    var element = angular.element(this.container.firstChild);
-                                    var animationClass = data.delta > 0 ? $scope.increaseClass || 'is-increasing' : $scope.decreaseClass || 'is-decreasing';
-                                    element.addClass += (animationClass);
-
-                                    $timeout.cancel(timeout);
-                                    timeout = $timeout(function() {
-                                        element.removeClass($scope.increaseClass + ' ' + $scope.decreaseClass);
-                                    }, 3000);
+                                        $timeout.cancel(timeout);
+                                        timeout = $timeout(function() {
+                                            element.removeClass($scope.increaseClass + ' ' + $scope.decreaseClass);
+                                        }, 3000);
+                                    });
                                 });
-                            });
+                            }
+
+                            ngAnalyticsService.ga.auth.once('success', callback);
+                            if (ngAnalyticsService.ga.auth.isAuthorized()) {
+                                callback();
+                            }
                         }
                     });
                 }
@@ -413,7 +419,6 @@
                         this.activeUsers = 0;
                     },
                     execute: function() {
-                        console.log('test');
                         this.polling_ && this.stop(), this.render_(), gapi.analytics.auth.isAuthorized() ? this.getActiveUsers_() : gapi.analytics.auth.once('success', this.getActiveUsers_.bind(this));
                     },
                     stop: function() {
@@ -422,7 +427,6 @@
                         });
                     },
                     render_: function() {
-                        console.log(this.get());
                         var t = this.get();
                         this.container = 'string' == typeof t.container ? document.getElementById(t.container) : t.container, this.container.innerHTML = t.template || this.template, this.container.querySelector('b').innerHTML = this.activeUsers, this.container.querySelector('span').innerHTML = t.label || 'Active Users';
                     },
@@ -430,7 +434,6 @@
                         var t = this.get(),
                             e = 1e3 * (t.pollingInterval || 5);
 
-                            console.log('test1');
                         if (isNaN(e) || 5e3 > e) throw new Error('Frequency must be 5 seconds or more.');
                         this.polling_ = !0, gapi.client.analytics.data.realtime.get({
                             ids: t.ids,
