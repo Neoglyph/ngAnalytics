@@ -99,7 +99,7 @@
                                 this.on('change', function(data) {
                                     var element = angular.element(this.container.firstChild);
                                     var animationClass = data.delta > 0 ? $scope.increaseClass || 'is-increasing' : $scope.decreaseClass || 'is-decreasing';
-                                    element.addClass += (animationClass);
+                                    element.addClass(animationClass);
 
                                     $timeout.cancel(timeout);
                                     timeout = $timeout(function() {
