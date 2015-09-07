@@ -338,6 +338,7 @@
                                     return ngAnalyticsService.viewSelectors[$scope.viewSelectorContainer];
                                 }, function (viewSelector) {
                                     if (viewSelector) {
+                                        console.log(viewSelector);
                                         ngAnalyticsService.viewSelectors[$scope.viewSelectorContainer].on('viewChange', function (ids) {
                                             var tasks = [];
                                             angular.forEach($scope.queries, function (query) {
