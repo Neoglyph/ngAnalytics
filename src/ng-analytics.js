@@ -113,8 +113,8 @@
                                     return ngAnalyticsService.viewSelectors[$scope.viewSelectorContainer];
                                 }, function (viewSelector) {
                                     if (viewSelector) {
+
                                         ngAnalyticsService.viewSelectors[$scope.viewSelectorContainer].on('viewChange', function (ids) {
-                                            console.log(ids);
                                             activeUsers.set(ids).execute();
                                         });
                                         // clear watcher
@@ -338,7 +338,7 @@
                                     return ngAnalyticsService.viewSelectors[$scope.viewSelectorContainer];
                                 }, function (viewSelector) {
                                     if (viewSelector) {
-                                        ngAnalyticsService.viewSelectors[$scope.viewSelectorContainer].on('change', function (ids) {
+                                        ngAnalyticsService.viewSelectors[$scope.viewSelectorContainer].on('viewChange', function (ids) {
                                             var tasks = [];
                                             angular.forEach($scope.queries, function (query) {
                                                 query.query.ids = ids;
