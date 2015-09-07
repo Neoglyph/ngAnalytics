@@ -49,6 +49,74 @@
         }
     ]);
 
+    app.directive('ngAnalyticsActiveUsers', [
+        'ngAnalyticsService',
+        '$timeout',
+        function (ngAnalyticsService, $timeout) {
+            return {
+                scope: {
+                    label: '@',
+                    increaseClass: '@?',
+                    decreaseClass: '@?'
+                },
+                restrict: 'E',
+                templateUrl: 'ngAnalytics-activeUsers/template.html',
+                link: function ($scope) {
+                    var first = !ngAnalyticsService.authorized ? true : false;
+                    ngAnalyticsService.authorized = true;
+                    // add functionality only if gapi is ready
+                    $scope.$watch(function () {
+                        return ngAnalyticsService.isReady;
+                    }, function (isReady) {
+                        if (isReady) {
+                            /**
+                            * Authorize the user immediately if the user has already granted access.
+                            * If no access has been created, render an authorize button inside the
+                            * element with the ID 'embed-api-auth-container'.
+                            */
+                            if (!ngAnalyticsService.ga.auth.isAuthorized() && first) {
+                                ngAnalyticsService.authorize($scope.authContainer || 'embed-api-auth-container');
+                            }
+                            /**
+                            * Create a new ViewSelector instance to be rendered inside of an
+                            * element with the id 'view-selector-container'.
+                            */
+                            $scope.activeUsersContainer = $scope.activeUsersContainer || 'active-users-container';
+
+                            var activeUsers = new ngAnalyticsService.ga.ActiveUsers({
+                                container: $scope.activeUsersContainer,
+                                pollingInterval: 5
+                            });
+
+                            var callback = function () {
+                                // Render the view selector to the page.
+                                activeUsers.once('success', function() {
+                                    var timeout;
+
+                                    this.on('change', function(data) {
+                                        var element = angular.element(this.container.firstChild);
+                                        var animationClass = data.delta > 0 ? $scope.increaseClass || 'is-increasing' : $scope.decreaseClass || 'is-decreasing';
+                                        element.addClass += (animationClass);
+
+                                        $timeout.cancel(timeout);
+                                        timeout = $timeout(function() {
+                                            element.removeClass($scope.increaseClass + ' ' + $scope.decreaseClass);
+                                        }, 3000);
+                                    });
+                                });
+                            };
+
+                            ngAnalyticsService.ga.auth.once('success', callback);
+                            if (ngAnalyticsService.ga.auth.isAuthorized()) {
+                                callback();
+                            }
+                        }
+                    });
+                }
+            };
+        }
+    ]);
+
     app.directive('ngAnalyticsAuth', [
         'ngAnalyticsService',
         function (ngAnalyticsService) {
@@ -356,6 +424,7 @@
             $templateCache.put('ngAnalytics-auth/template.html', '<div id="{{authContainer}}" ng-hide="hide"></div>');
             $templateCache.put('ngAnalytics-chart/template.html', '<div id="{{chart.chart.container}}"></div>');
             $templateCache.put('ngAnalytics-view/template.html', '<div id="{{viewSelectorContainer}}"></div>');
+            $templateCache.put('ngAnalytics-activeUsers/template.html', '<div id="{{activeUsersContainer}}"></div>');
         }
     ]);
 }).call(this);
