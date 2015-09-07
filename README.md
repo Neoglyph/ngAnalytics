@@ -130,7 +130,7 @@ Adds a active user counter.
 #### Attributes
 * __view-selector-container__ _(optional, required if defaultIds not set)_ - string of id for connected viewSelector
 * __auth-container__ _(optional, default: 'embed-api-auth-container')_ - string of the id of the auth-container - required to connect active user code with the authorization
-* __default-ids___ _(optional, required if view-selector-container not set)_ object with configuration and required ids-property
+* __default-ids__ _(optional, required if view-selector-container not set)_ - object with configuration and required ids-property
 >
     $scope.defaultIds = {
         ids: 'ga:XXXXXX'
