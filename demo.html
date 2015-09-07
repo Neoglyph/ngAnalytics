@@ -71,6 +71,10 @@
                     }
                 };
 
+                $scope.defaultIds = {
+                    ids: 'ga:81197147'
+                };
+
                 $scope.queries = [{
                     query: {
                         ids: 'ga:81197147',  // put your viewID here
@@ -93,6 +97,7 @@
             <ng-analytics-report queries="queries" auth-container="embed-api-auth-container"></ng-analytics-report>
             <ng-analytics-report queries="queries" auth-container="embed-api-auth-container" view-selector-container="view-selector-container"></ng-analytics-report>
             <ng-analytics-chart chart="extraChart" auth-container="embed-api-auth-container"></ng-analytics-chart>
+            <ng-analytics-active-users default-ids="defaultIds" auth-container="embed-api-auth-container"></ng-analytics-active-users>
             <ng-analytics-active-users view-selector-container="view-selector-container" auth-container="embed-api-auth-container"></ng-analytics-active-users>
             <ng-analytics-chart ng-repeat="chart in charts" chart="chart" view-selector-container="view-selector-container" auth-container="embed-api-auth-container"></ng-analytics-chart>
         </div>
