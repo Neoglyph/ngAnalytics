@@ -26,7 +26,6 @@
 
             this.authorize = function (container) {
                 var self = this;
-
                 $timeout(function () {
                     if (!self.serviceAuthToken) {
                         return self.ga.auth.authorize({
@@ -83,7 +82,7 @@
                             */
                             $scope.activeUsersContainer = $scope.activeUsersContainer || 'active-users-container';
 
-                            var activeUsers = new ngAnalyticsService.ga.ActiveUsers({
+                            var activeUsers = new ngAnalyticsService.ga.ext.ActiveUsers({
                                 container: $scope.activeUsersContainer,
                                 pollingInterval: 5
                             });
