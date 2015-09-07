@@ -103,7 +103,7 @@
 
                                     $timeout.cancel(timeout);
                                     timeout = $timeout(function() {
-                                        element.removeClass($scope.increaseClass + ' ' + $scope.decreaseClass);
+                                        element.removeClass(animationClass);
                                     }, 3000);
                                 });
                             });
