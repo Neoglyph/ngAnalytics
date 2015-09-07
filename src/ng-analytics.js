@@ -113,7 +113,7 @@
                                     return ngAnalyticsService.viewSelectors[$scope.viewSelectorContainer];
                                 }, function (viewSelector) {
                                     if (viewSelector) {
-                                        ngAnalyticsService.viewSelectors[$scope.viewSelectorContainer].on('viewChange', function (ids) {
+                                        ngAnalyticsService.viewSelectors[$scope.viewSelectorContainer].on('change', function (ids) {
                                             console.log(viewSelector);
                                             activeUsers.set(ids).execute();
                                         });
@@ -229,7 +229,7 @@
                                     return ngAnalyticsService.viewSelectors[$scope.viewSelectorContainer];
                                 }, function (viewSelector) {
                                     if (viewSelector) {
-                                        ngAnalyticsService.viewSelectors[$scope.viewSelectorContainer].on('viewChange', function (ids) {
+                                        ngAnalyticsService.viewSelectors[$scope.viewSelectorContainer].on('change', function (ids) {
                                             var newIds = {
                                                 query: {
                                                     ids: ids
@@ -339,7 +339,7 @@
                                     return ngAnalyticsService.viewSelectors[$scope.viewSelectorContainer];
                                 }, function (viewSelector) {
                                     if (viewSelector) {
-                                        ngAnalyticsService.viewSelectors[$scope.viewSelectorContainer].on('viewChange', function (ids) {
+                                        ngAnalyticsService.viewSelectors[$scope.viewSelectorContainer].on('change', function (ids) {
                                             var tasks = [];
                                             angular.forEach($scope.queries, function (query) {
                                                 query.query.ids = ids;
