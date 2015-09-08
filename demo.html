@@ -8,6 +8,12 @@
             .input-error {
                 border: 2px dashed red;
             }
+            .is-increasing, .increaser {
+                background-color: green;
+            }
+            .is-decreasing, .decreaser {
+                background-color: red;
+            }
         </style>
 
         <script type="text/javascript" src="bower_components/angular/angular.min.js"></script>
@@ -16,7 +22,7 @@
             // declare a module and load ngAnalytics
             var myAppModule = angular.module('gaTest', ['ngAnalytics']);
             myAppModule.run(['ngAnalyticsService', function (ngAnalyticsService) {
-                ngAnalyticsService.setClientId('CLIENT_ID');
+                ngAnalyticsService.setClientId('382980600533-ggc5grllbblhe1krh405m8k45prhep28.apps.googleusercontent.com');
             }]);
             myAppModule.controller('MainCtrl', function ($scope) {
                 $scope.charts = [{
@@ -71,6 +77,10 @@
                     }
                 };
 
+                $scope.defaultIds = {
+                    ids: 'ga:81197147'
+                };
+
                 $scope.queries = [{
                     query: {
                         ids: 'ga:81197147',  // put your viewID here
@@ -93,6 +103,8 @@
             <ng-analytics-report queries="queries" auth-container="embed-api-auth-container"></ng-analytics-report>
             <ng-analytics-report queries="queries" auth-container="embed-api-auth-container" view-selector-container="view-selector-container"></ng-analytics-report>
             <ng-analytics-chart chart="extraChart" auth-container="embed-api-auth-container"></ng-analytics-chart>
+            <ng-analytics-active-users default-ids="defaultIds" auth-container="embed-api-auth-container"></ng-analytics-active-users>
+            <ng-analytics-active-users label="Current users:" increase-class="increaser" decrease-class="decreaser" active-users-container="active-users-container-1" view-selector-container="view-selector-container" auth-container="embed-api-auth-container"></ng-analytics-active-users>
             <ng-analytics-chart ng-repeat="chart in charts" chart="chart" view-selector-container="view-selector-container" auth-container="embed-api-auth-container"></ng-analytics-chart>
         </div>
     </body>
