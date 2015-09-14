@@ -98,13 +98,16 @@
 
                                 this.on('change', function(data) {
                                     var element = angular.element(this.container.firstChild);
-                                    var animationClass = data.delta > 0 ? $scope.increaseClass || 'is-increasing' : $scope.decreaseClass || 'is-decreasing';
-                                    element.addClass(animationClass);
+                                    var animationClass = data.delta > 0 ? $scope.increaseClass || 'is-increasing' : (data.delta < 0 ? $scope.increaseClass || 'is-decreasing' : '');
 
-                                    $timeout.cancel(timeout);
-                                    timeout = $timeout(function() {
-                                        element.removeClass(animationClass);
-                                    }, 3000);
+                                    if (animationClass) {
+                                        element.addClass(animationClass);
+
+                                        $timeout.cancel(timeout);
+                                        timeout = $timeout(function() {
+                                            element.removeClass(animationClass);
+                                        }, 3000);
+                                    }
                                 });
                             });
 
