@@ -201,7 +201,8 @@
                 scope: {
                     viewSelectorContainer: '@',
                     authContainer: '@',
-                    chart: '='
+                    chart: '=',
+                    chartResponseFn: '='
                 },
                 restrict: 'E',
                 templateUrl: 'ngAnalytics-chart/template.html',
@@ -228,7 +229,12 @@
                             * Create chart
                             */
                             chart = new ngAnalyticsService.ga.googleCharts.DataChart($scope.chart);
-
+                            chart.on('success', function(response){
+                              chart.off('success');
+                              if($scope.chartResponseFn){
+                                $scope.chartResponseFn(response, $scope.chart.chart);
+                              }
+                            });
                             // If viewSelector container -> watch if viewselector is created -> if so -> add change listener and update chart
                             if ($scope.viewSelectorContainer) {
                                 viewWatcher = $scope.$watch(function () {
