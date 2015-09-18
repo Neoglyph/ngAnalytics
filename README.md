@@ -5,6 +5,9 @@ AngularJS Directive for [Google Analytics Embed API](https://developers.google.c
 
 German tutorial on [FLYACTS website](http://www.flyacts.com/blog/angularjs-google-analytics-embed-api-nganalytics/)
 
+## For Contribution and Pull-Requests
+Please use the develop-branch!!!
+
 ## Functionality
 * Authorization
 * Add DataCharts
