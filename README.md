@@ -98,6 +98,12 @@ Adds a chart and can be connected to a viewSelector.
 
 * __view-selector-container__ _(optional)_ - string of id for connected viewSelector
 * __auth-container__ _(optional, default: 'embed-api-auth-container')_ - string of the id of the auth-container - required to connect chart with the authorization
+* __chartResponseFn__ _(optional)_ - function is called when the query has successfully completed and the chart has been rendered. The first parameter passed is the result object described in the [Google Embed API Reference ](https://developers.google.com/analytics/devguides/reporting/embed/v1/component-reference?hl=en#datachart-events) the second is the chart property of the chart attribute set in the directive, this allows you to modify DataTable object created by the query and then re-draw the chart e.g.
+
+>
+      $scope.chartResponseFn = function(response, chartOptions){
+        response.chart.draw(response.dataTable, chartOptions.options);   
+      }   
 
 ### Report - ng-analytics-report
 Adds report functionality to angular.
