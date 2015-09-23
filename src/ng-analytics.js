@@ -216,57 +216,64 @@
                     }, function (isReady) {
                         if (isReady) {
                             var chart;
-                            /**
-                            * Authorize the user immediately if the user has already granted access.
-                            * If no access has been created, render an authorize button inside the
-                            * element with the ID 'embed-api-auth-container'.
-                            */
-                            if (!ngAnalyticsService.ga.auth.isAuthorized() && first) {
-                                ngAnalyticsService.authorize($scope.authContainer || 'embed-api-auth-container');
-                            }
+                            var chartWatcher = $scope.$watch('chart', function( chartObject ) {
+                                if (!angular.isDefined(chartObject) || chartObject === null) return;
+                                    /**
+                                     * Create chart
+                                     */
+                                    chart = new ngAnalyticsService.ga.googleCharts.DataChart($scope.chart);
+                                    chart.on('success', function(response){
+                                      chart.off('success');
+                                      if($scope.chartResponseFn){
+                                        $scope.chartResponseFn(response, $scope.chart.chart);
+                                      }
+                                    });
 
-                            /**
-                            * Create chart
-                            */
-                            chart = new ngAnalyticsService.ga.googleCharts.DataChart($scope.chart);
-                            chart.on('success', function(response){
-                              chart.off('success');
-                              if($scope.chartResponseFn){
-                                $scope.chartResponseFn(response, $scope.chart.chart);
-                              }
-                            });
-                            // If viewSelector container -> watch if viewselector is created -> if so -> add change listener and update chart
-                            if ($scope.viewSelectorContainer) {
-                                viewWatcher = $scope.$watch(function () {
-                                    return ngAnalyticsService.viewSelectors[$scope.viewSelectorContainer];
-                                }, function (viewSelector) {
-                                    if (viewSelector) {
-                                        ngAnalyticsService.viewSelectors[$scope.viewSelectorContainer].on('change', function (ids) {
-                                            var newIds = {
-                                                query: {
-                                                    ids: ids
-                                                }
-                                            };
-                                            chart.set(newIds).execute();
-                                        });
-                                        // clear watcher
-                                        viewWatcher();
+                                    /**
+                                    * Authorize the user immediately if the user has already granted access.
+                                    * If no access has been created, render an authorize button inside the
+                                    * element with the ID 'embed-api-auth-container'.
+                                    */
+                                    if (!ngAnalyticsService.ga.auth.isAuthorized() && first) {
+                                        ngAnalyticsService.authorize($scope.authContainer || 'embed-api-auth-container');
                                     }
-                                });
-                            } else {
-                                var callback = function () {
-                                    // Render the view selector to the page.
-                                    chart.execute();
-                                };
+                                    
+                                    // If viewSelector container -> watch if viewselector is created -> if so -> add change listener and update chart
+                                    if ($scope.viewSelectorContainer) {
+                                        viewWatcher = $scope.$watch(function () {
+                                            return ngAnalyticsService.viewSelectors[$scope.viewSelectorContainer];
+                                        }, function (viewSelector) {
+                                            if (viewSelector) {
+                                                ngAnalyticsService.viewSelectors[$scope.viewSelectorContainer].on('change', function (ids) {
+                                                    var newIds = {
+                                                        query: {
+                                                            ids: ids
+                                                        }
+                                                    };
+                                                    chart.set(newIds).execute();
+                                                });
+                                                // clear watcher
+                                                viewWatcher();
+                                            }
+                                        });
+                                    } else {
+                                        var callback = function () {
+                                            // Render the view selector to the page.
+                                            chart.execute();
+                                        };
 
-                                ngAnalyticsService.ga.auth.once('success', callback);
-                                if (ngAnalyticsService.ga.auth.isAuthorized()) {
-                                    callback();
-                                }
-                            }
+                                        ngAnalyticsService.ga.auth.once('success', callback);
+                                        if (ngAnalyticsService.ga.auth.isAuthorized()) {
+                                            callback();
+                                        }
+                                    }
 
-                            // clear watcher;
-                            watcher();
+                                    // clear watcher;
+                                    watcher();
+                                    chartWatcher();
+                            });
+
+                            
                         }
                     });
                 }
